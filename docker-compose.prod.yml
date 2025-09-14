@@ -1,0 +1,30 @@
+services:
+  body-language-api:
+    build: .
+    container_name: body-language-api
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+      - GUNICORN_WORKERS=4
+      - GUNICORN_TIMEOUT=120
+    volumes:
+      - ./body_language.pkl:/app/body_language.pkl:ro
+      - ./coords.csv:/app/coords.csv:ro
+    command: ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "--worker-class", "sync", "app:app"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5001/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
