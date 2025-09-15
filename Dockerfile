@@ -27,7 +27,6 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libpng-dev \
     libtiff-dev \
-    libatlas-base-dev \
     python3-dev \
     python3-opencv \
     wget \
@@ -35,12 +34,11 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 # Copy requirements files first for better Docker layer caching
-COPY requirements.txt emotion_requirements.txt ./
+COPY requirements.txt ./
 
 # Install Python packages
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r emotion_requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .

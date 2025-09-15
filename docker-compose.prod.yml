@@ -11,7 +11,6 @@ services:
       - GUNICORN_TIMEOUT=120
     volumes:
       - ./body_language.pkl:/app/body_language.pkl:ro
-      - ./coords.csv:/app/coords.csv:ro
     command: ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "--timeout", "120", "--worker-class", "sync", "app:app"]
     restart: unless-stopped
     healthcheck:
